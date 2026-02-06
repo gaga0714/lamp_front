@@ -1,0 +1,63 @@
+<template>
+  <div class="lab-approve">
+    <el-card>
+      <template #header>
+        <span>预约审批</span>
+      </template>
+      <el-table :data="list" border stripe>
+        <el-table-column prop="labName" label="实验室" width="120" />
+        <el-table-column prop="userName" label="预约人" width="100" />
+        <el-table-column prop="date" label="日期" width="120" />
+        <el-table-column prop="slot" label="时段" width="120" />
+        <el-table-column prop="purpose" label="用途" show-overflow-tooltip />
+        <el-table-column label="操作" width="160" fixed="right">
+          <template #default="{ row }">
+            <el-button type="success" link size="small" @click="handleApprove(row, true)">通过</el-button>
+            <el-button type="danger" link size="small" @click="handleApprove(row, false)">拒绝</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        v-model:current-page="page"
+        v-model:page-size="pageSize"
+        :total="total"
+        layout="total, sizes, prev, pager, next"
+        class="pagination"
+        @current-change="loadList"
+        @size-change="loadList"
+      />
+    </el-card>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { getApproveList, approveBooking } from '@/api/lab'
+
+const list = ref([])
+const page = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+
+async function loadList() {
+  const res = await getApproveList({ page: page.value, pageSize: pageSize.value }).catch(() => ({ list: [], total: 0 }))
+  list.value = res?.list ?? res?.records ?? []
+  total.value = res?.total ?? 0
+}
+
+async function handleApprove(row, approved) {
+  await approveBooking(row.id, { approved, remark: '' })
+  ElMessage.success(approved ? '已通过' : '已拒绝')
+  loadList()
+}
+
+onMounted(loadList)
+</script>
+
+<style lang="scss" scoped>
+.pagination {
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+</style>

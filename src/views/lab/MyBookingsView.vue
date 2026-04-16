@@ -5,7 +5,11 @@
         <span>我的预约</span>
       </template>
       <el-table :data="list" border stripe>
+        <el-table-column prop="labId" label="编号" width="80" />
         <el-table-column prop="labName" label="实验室" width="140" />
+        <el-table-column prop="location" label="位置" width="140" show-overflow-tooltip />
+        <el-table-column prop="capacity" label="容量" width="80" />
+        <el-table-column prop="equipmentInfo" label="设备" min-width="180" show-overflow-tooltip />
         <el-table-column prop="date" label="日期" width="120" />
         <el-table-column prop="slot" label="时段" width="120" />
         <el-table-column prop="purpose" label="用途" show-overflow-tooltip />

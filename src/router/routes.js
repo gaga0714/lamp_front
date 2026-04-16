@@ -82,13 +82,13 @@ export default [
         path: 'lab/approve',
         name: 'LabApprove',
         component: () => import('@/views/lab/LabApproveView.vue'),
-        meta: { title: '预约审批', icon: 'CircleCheck', roles: ['labAdmin', 'admin'] },
+        meta: { title: '预约审批', icon: 'CircleCheck', roles: ['admin'] },
       },
       {
         path: 'lab/manage',
         name: 'LabManage',
         component: () => import('@/views/lab/LabManageView.vue'),
-        meta: { title: '实验室管理', icon: 'Setting', roles: ['labAdmin', 'admin'] },
+        meta: { title: '实验室管理', icon: 'Setting', roles: ['admin'] },
       },
       // 个人中心
       {

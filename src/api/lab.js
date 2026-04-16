@@ -10,10 +10,11 @@ export function getLabList(params) {
 }
 
 /** 实验室详情 */
-export function getLabDetail(id) {
+export function getLabDetail(id, params) {
   return request({
     url: `/lab/${id}`,
     method: 'get',
+    params,
   })
 }
 

@@ -16,7 +16,6 @@
             {{ detail.status === 'available' ? '可预约' : '维护中' }}
           </el-tag>
         </p>
-        <p><strong>开放时间：</strong>{{ detail.openTime || '-' }}</p>
       </div>
     </el-card>
   </div>

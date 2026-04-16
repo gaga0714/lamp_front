@@ -10,6 +10,7 @@
         <el-col v-for="item in list" :key="item.id" :span="6">
           <el-card shadow="hover" class="lab-card" @click="$router.push(`/lab/detail/${item.id}`)">
             <div class="lab-name">{{ item.name }}</div>
+            <div class="lab-location">{{ item.location || '暂无位置' }}</div>
             <div class="lab-desc">{{ item.description || '暂无描述' }}</div>
             <div class="lab-meta">
               <span>容量：{{ item.capacity ?? '-' }}人</span>
@@ -50,6 +51,11 @@ onMounted(loadList)
   .lab-name {
     font-size: 16px;
     font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .lab-location {
+    font-size: 12px;
+    color: #606266;
     margin-bottom: 8px;
   }
   .lab-desc {

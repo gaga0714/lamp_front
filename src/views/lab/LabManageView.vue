@@ -7,6 +7,7 @@
       </template>
       <el-table :data="list" border stripe>
         <el-table-column prop="name" label="名称" width="140" />
+        <el-table-column prop="location" label="位置" width="180" show-overflow-tooltip />
         <el-table-column prop="description" label="描述" show-overflow-tooltip />
         <el-table-column prop="capacity" label="容量" width="80" />
         <el-table-column prop="status" label="状态" width="100">

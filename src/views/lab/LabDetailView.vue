@@ -8,6 +8,7 @@
         </el-button>
       </template>
       <div v-if="detail" class="detail-content">
+        <p><strong>位置：</strong>{{ detail.location || '暂无' }}</p>
         <p><strong>描述：</strong>{{ detail.description || '暂无' }}</p>
         <p><strong>容量：</strong>{{ detail.capacity ?? '-' }} 人</p>
         <p><strong>状态：</strong>

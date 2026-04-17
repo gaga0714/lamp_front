@@ -36,6 +36,14 @@ export function getLeaveList(params) {
   })
 }
 
+/** 撤回请假申请 */
+export function cancelLeave(id) {
+  return request({
+    url: `/attendance/leave/${id}/cancel`,
+    method: 'put',
+  })
+}
+
 /** 教师待审批请假列表 */
 export function getPendingLeaveList(params) {
   return request({

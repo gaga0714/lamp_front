@@ -18,6 +18,11 @@
             <el-tag :type="statusType(row.status)">{{ row.status }}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="操作" width="100" fixed="right">
+          <template #default="{ row }">
+            <el-button v-if="row.status === '待审批'" type="danger" link size="small" @click="handleCancel(row)">撤回</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         v-model:current-page="page"
@@ -34,7 +39,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getLeaveList } from '@/api/attendance'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { cancelLeave, getLeaveList } from '@/api/attendance'
 
 const list = ref([])
 const page = ref(1)
@@ -50,6 +56,13 @@ async function loadList() {
   const res = await getLeaveList({ page: page.value, pageSize: pageSize.value }).catch(() => ({ list: [], total: 0 }))
   list.value = res?.list ?? res?.records ?? []
   total.value = res?.total ?? 0
+}
+
+async function handleCancel(row) {
+  await ElMessageBox.confirm('确定撤回这条请假申请？', '提示', { type: 'warning' })
+  await cancelLeave(row.id)
+  ElMessage.success('已撤回')
+  loadList()
 }
 
 onMounted(loadList)

@@ -35,10 +35,11 @@
           <el-checkbox v-model="filters.onlyAvailable">仅看可预约</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="loadList">查询</el-button>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
           <el-button @click="resetFilters">重置</el-button>
         </el-form-item>
       </el-form>
+      <div class="result-summary">{{ resultSummaryText }}</div>
       <el-row :gutter="16" class="lab-cards">
         <el-col v-for="item in list" :key="item.id" :span="6">
           <el-card shadow="hover" class="lab-card" @click="goDetail(item)">
@@ -53,7 +54,7 @@
                 {{ item.status === 'available' ? '可预约' : '维护中' }}
               </el-tag>
             </div>
-            <div v-if="filters.date && filters.slot" class="lab-availability">
+            <div v-if="appliedFilters.date && appliedFilters.slot" class="lab-availability">
               <el-tag :type="item.currentSlotAvailable ? 'success' : 'warning'" size="small">
                 {{ item.currentSlotAvailable ? '当前时段可预约' : '当前时段不可预约' }}
               </el-tag>
@@ -62,19 +63,39 @@
         </el-col>
       </el-row>
       <el-empty v-if="list.length === 0" description="暂无实验室" />
+      <el-pagination
+        v-model:current-page="page"
+        :total="total"
+        :page-size="pageSize"
+        layout="total, prev, pager, next"
+        class="pagination"
+        @current-change="loadList"
+      />
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
+import { computed, reactive, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getLabList } from '@/api/lab'
 import { formatLabCode } from '@/utils/format'
 
 const router = useRouter()
 const list = ref([])
+const total = ref(0)
+const page = ref(1)
+const pageSize = ref(8)
 const filters = reactive({
+  name: '',
+  date: '',
+  slot: '',
+  minCapacity: null,
+  onlyAvailable: false,
+  location: '',
+  equipment: '',
+})
+const appliedFilters = reactive({
   name: '',
   date: '',
   slot: '',
@@ -114,18 +135,51 @@ const equipmentOptions = [
   '3D打印机',
   '服务器集群',
 ]
+const hasActiveFilters = computed(() => {
+  return !!(
+    appliedFilters.name ||
+    appliedFilters.date ||
+    appliedFilters.slot ||
+    appliedFilters.minCapacity ||
+    appliedFilters.onlyAvailable ||
+    appliedFilters.location ||
+    appliedFilters.equipment
+  )
+})
+const resultSummaryText = computed(() => {
+  return hasActiveFilters.value ? `当前筛选匹配 ${total.value} 个实验室` : `当前共有 ${total.value} 个实验室`
+})
 
 async function loadList() {
   const res = await getLabList({
-    name: filters.name || undefined,
-    date: filters.date || undefined,
-    slot: filters.slot || undefined,
-    minCapacity: filters.minCapacity ?? undefined,
-    onlyAvailable: filters.onlyAvailable || undefined,
-    location: filters.location || undefined,
-    equipment: filters.equipment || undefined,
+    name: appliedFilters.name || undefined,
+    date: appliedFilters.date || undefined,
+    slot: appliedFilters.slot || undefined,
+    minCapacity: appliedFilters.minCapacity ?? undefined,
+    onlyAvailable: appliedFilters.onlyAvailable || undefined,
+    location: appliedFilters.location || undefined,
+    equipment: appliedFilters.equipment || undefined,
+    page: page.value,
+    pageSize: pageSize.value,
   }).catch(() => ({}))
   list.value = res?.list ?? res?.records ?? []
+  total.value = res?.total ?? 0
+  if (total.value > 0 && list.value.length === 0 && page.value > 1) {
+    page.value = Math.ceil(total.value / pageSize.value)
+    await loadList()
+  }
+}
+
+function handleSearch() {
+  appliedFilters.name = filters.name
+  appliedFilters.date = filters.date
+  appliedFilters.slot = filters.slot
+  appliedFilters.minCapacity = filters.minCapacity
+  appliedFilters.onlyAvailable = filters.onlyAvailable
+  appliedFilters.location = filters.location
+  appliedFilters.equipment = filters.equipment
+  page.value = 1
+  loadList()
 }
 
 function resetFilters() {
@@ -136,14 +190,22 @@ function resetFilters() {
   filters.onlyAvailable = false
   filters.location = ''
   filters.equipment = ''
+  appliedFilters.name = ''
+  appliedFilters.date = ''
+  appliedFilters.slot = ''
+  appliedFilters.minCapacity = null
+  appliedFilters.onlyAvailable = false
+  appliedFilters.location = ''
+  appliedFilters.equipment = ''
+  page.value = 1
   loadList()
 }
 
 function goDetail(item) {
   const query = {}
-  if (filters.date) query.date = filters.date
-  if (filters.slot) query.slot = filters.slot
-  if (filters.onlyAvailable) query.onlyAvailable = 'true'
+  if (appliedFilters.date) query.date = appliedFilters.date
+  if (appliedFilters.slot) query.slot = appliedFilters.slot
+  if (appliedFilters.onlyAvailable) query.onlyAvailable = 'true'
   router.push({ path: `/lab/detail/${item.id}`, query })
 }
 
@@ -154,8 +216,16 @@ onMounted(loadList)
 .filter-form {
   margin-bottom: 16px;
 }
+.result-summary {
+  font-size: 14px;
+  color: #606266;
+}
 .lab-cards {
   margin-top: 16px;
+}
+.pagination {
+  margin-top: 16px;
+  justify-content: flex-end;
 }
 .lab-card {
   cursor: pointer;

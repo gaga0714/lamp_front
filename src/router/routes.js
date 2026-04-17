@@ -76,13 +76,13 @@ export default [
         path: 'lab/book',
         name: 'LabBook',
         component: () => import('@/views/lab/LabBookView.vue'),
-        meta: { title: '预约实验室', icon: 'Calendar', hideMenu: true },
+        meta: { title: '预约实验室', icon: 'Calendar', hideMenu: true, roles: ['student', 'teacher'] },
       },
       {
         path: 'lab/my-bookings',
         name: 'MyBookings',
         component: () => import('@/views/lab/MyBookingsView.vue'),
-        meta: { title: '我的预约', icon: 'Tickets' },
+        meta: { title: '我的预约', icon: 'Tickets', roles: ['student', 'teacher'] },
       },
       {
         path: 'lab/approve',
@@ -115,12 +115,6 @@ export default [
         name: 'AdminUsers',
         component: () => import('@/views/admin/UsersView.vue'),
         meta: { title: '用户管理', icon: 'UserFilled', roles: ['admin'] },
-      },
-      {
-        path: 'admin/lab',
-        name: 'AdminLab',
-        component: () => import('@/views/admin/LabManageView.vue'),
-        meta: { title: '实验室管理', icon: 'OfficeBuilding', roles: ['admin'] },
       },
     ],
   },

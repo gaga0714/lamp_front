@@ -5,7 +5,11 @@
         <span>我的预约</span>
       </template>
       <el-table :data="list" border stripe>
-        <el-table-column prop="labId" label="编号" width="80" />
+        <el-table-column label="编号" width="90">
+          <template #default="{ row }">
+            {{ formatLabCode(row.labId) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="labName" label="实验室" width="140" />
         <el-table-column prop="location" label="位置" width="140" show-overflow-tooltip />
         <el-table-column prop="capacity" label="容量" width="80" />
@@ -41,6 +45,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { getMyBookings, cancelBooking } from '@/api/lab'
+import { formatLabCode } from '@/utils/format'
 
 const list = ref([])
 const page = ref(1)

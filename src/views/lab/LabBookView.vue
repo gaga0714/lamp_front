@@ -10,7 +10,7 @@
             <el-option
               v-for="item in labList"
               :key="item.id"
-              :label="`#${item.id} ${item.name}${item.location ? `（${item.location}）` : ''}`"
+              :label="`${formatLabCode(item.id)} ${item.name}${item.location ? `（${item.location}）` : ''}`"
               :value="item.id"
             />
           </el-select>
@@ -46,6 +46,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getLabList } from '@/api/lab'
 import { createBooking } from '@/api/lab'
+import { formatLabCode } from '@/utils/format'
 
 const route = useRoute()
 const router = useRouter()

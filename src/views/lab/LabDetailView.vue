@@ -8,7 +8,7 @@
         </el-button>
       </template>
       <div v-if="detail" class="detail-content">
-        <p><strong>实验室编号：</strong>{{ detail.id }}</p>
+        <p><strong>实验室编号：</strong>{{ formatLabCode(detail.id) }}</p>
         <p><strong>位置：</strong>{{ detail.location || '暂无' }}</p>
         <p><strong>描述：</strong>{{ detail.description || '暂无' }}</p>
         <p><strong>可用设备：</strong>{{ detail.equipmentInfo || '暂无' }}</p>
@@ -48,6 +48,7 @@
 import { ref, onMounted, computed, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getLabDetail } from '@/api/lab'
+import { formatLabCode } from '@/utils/format'
 
 const route = useRoute()
 const router = useRouter()

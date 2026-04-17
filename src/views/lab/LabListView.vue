@@ -42,7 +42,7 @@
       <el-row :gutter="16" class="lab-cards">
         <el-col v-for="item in list" :key="item.id" :span="6">
           <el-card shadow="hover" class="lab-card" @click="goDetail(item)">
-            <div class="lab-id">实验室编号：{{ item.id }}</div>
+            <div class="lab-id">实验室编号：{{ formatLabCode(item.id) }}</div>
             <div class="lab-name">{{ item.name }}</div>
             <div class="lab-location">{{ item.location || '暂无位置' }}</div>
             <div class="lab-desc">{{ item.description || '暂无描述' }}</div>
@@ -70,6 +70,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getLabList } from '@/api/lab'
+import { formatLabCode } from '@/utils/format'
 
 const router = useRouter()
 const list = ref([])

@@ -5,6 +5,10 @@
         <span>请假审批</span>
       </template>
       <el-table :data="list" border stripe>
+        <el-table-column prop="courseCode" label="课程编号" width="120" />
+        <el-table-column prop="courseName" label="课程名称" min-width="160" />
+        <el-table-column prop="courseDate" label="上课日期" width="120" />
+        <el-table-column prop="courseTime" label="上课时间" width="160" />
         <el-table-column prop="username" label="学号" width="120" />
         <el-table-column prop="name" label="姓名" width="100" />
         <el-table-column prop="type" label="类型" width="80">
@@ -12,8 +16,6 @@
             {{ typeMap[row.type] ?? row.type }}
           </template>
         </el-table-column>
-        <el-table-column prop="startTime" label="开始时间" width="170" />
-        <el-table-column prop="endTime" label="结束时间" width="170" />
         <el-table-column prop="reason" label="事由" min-width="220" show-overflow-tooltip />
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">

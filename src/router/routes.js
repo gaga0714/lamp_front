@@ -24,22 +24,34 @@ export default [
       },
       // 考勤
       {
+        path: 'course/student/schedule',
+        name: 'StudentSchedule',
+        component: () => import('@/views/course/StudentScheduleView.vue'),
+        meta: { title: '我的课表', icon: 'Memo', roles: ['student'] },
+      },
+      {
+        path: 'course/teacher/schedule',
+        name: 'TeacherSchedule',
+        component: () => import('@/views/course/TeacherScheduleView.vue'),
+        meta: { title: '我的授课', icon: 'Reading', roles: ['teacher'] },
+      },
+      {
         path: 'attendance/check-in',
         name: 'AttendanceCheckIn',
         component: () => import('@/views/attendance/CheckInView.vue'),
-        meta: { title: '考勤签到', icon: 'Calendar', roles: ['student'] },
+        meta: { title: '课程签到', icon: 'Calendar', roles: ['student'] },
       },
       {
         path: 'attendance/records',
         name: 'AttendanceRecords',
         component: () => import('@/views/attendance/RecordsView.vue'),
-        meta: { title: '考勤记录', icon: 'List', roles: ['student'] },
+        meta: { title: '课程考勤', icon: 'List', roles: ['student'] },
       },
       {
         path: 'attendance/leave/apply',
         name: 'LeaveApply',
         component: () => import('@/views/attendance/LeaveApplyView.vue'),
-        meta: { title: '请假申请', icon: 'EditPen', roles: ['student'] },
+        meta: { title: '课程请假', icon: 'EditPen', roles: ['student'] },
       },
       {
         path: 'attendance/leave/list',
@@ -54,10 +66,22 @@ export default [
         meta: { title: '请假审批', icon: 'CircleCheck', roles: ['teacher'] },
       },
       {
+        path: 'attendance/course/manage',
+        name: 'CourseAttendanceManage',
+        component: () => import('@/views/attendance/CourseManageView.vue'),
+        meta: { title: '课程考勤管理', icon: 'DataAnalysis', roles: ['teacher'] },
+      },
+      {
         path: 'attendance/manage',
         name: 'AttendanceManage',
         component: () => import('@/views/attendance/ManageView.vue'),
-        meta: { title: '考勤管理', icon: 'Setting', roles: ['admin'] },
+        meta: { title: '考勤总览', icon: 'Setting', roles: ['admin'] },
+      },
+      {
+        path: 'course/manage',
+        name: 'CourseManage',
+        component: () => import('@/views/course/CourseManageView.vue'),
+        meta: { title: '课表管理', icon: 'Collection', roles: ['admin'] },
       },
       // 实验室预约
       {

@@ -2,16 +2,19 @@
   <div class="leave-list">
     <el-card>
       <template #header>
-        <span>我的请假</span>
+        <span>我的课程请假</span>
       </template>
       <el-table :data="list" border stripe>
+        <el-table-column prop="courseCode" label="课程编号" width="120" />
+        <el-table-column prop="courseName" label="课程名称" min-width="180" />
+        <el-table-column prop="teacherName" label="授课教师" width="120" />
+        <el-table-column prop="courseDate" label="日期" width="120" />
+        <el-table-column prop="courseTime" label="上课时间" width="160" />
         <el-table-column prop="type" label="类型" width="80">
           <template #default="{ row }">
             {{ { personal: '事假', sick: '病假', other: '其他' }[row.type] ?? row.type }}
           </template>
         </el-table-column>
-        <el-table-column prop="startTime" label="开始时间" width="170" />
-        <el-table-column prop="endTime" label="结束时间" width="170" />
         <el-table-column prop="reason" label="事由" show-overflow-tooltip />
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">

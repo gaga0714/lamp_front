@@ -50,9 +50,18 @@
     <el-card class="quick-actions" shadow="hover">
       <template #header>快捷入口</template>
       <div class="actions">
-        <el-button type="primary" @click="$router.push('/attendance/check-in')">考勤签到</el-button>
-        <el-button @click="$router.push('/attendance/records')">考勤记录</el-button>
-        <el-button @click="$router.push('/attendance/leave/apply')">请假申请</el-button>
+        <template v-if="role === 'student'">
+          <el-button type="primary" @click="$router.push('/attendance/check-in')">考勤签到</el-button>
+          <el-button @click="$router.push('/attendance/records')">考勤记录</el-button>
+          <el-button @click="$router.push('/attendance/leave/apply')">请假申请</el-button>
+          <el-button @click="$router.push('/attendance/leave/list')">我的请假</el-button>
+        </template>
+        <template v-else-if="role === 'teacher'">
+          <el-button type="primary" @click="$router.push('/attendance/leave/approve')">请假审批</el-button>
+        </template>
+        <template v-else-if="role === 'admin'">
+          <el-button type="primary" @click="$router.push('/attendance/manage')">考勤管理</el-button>
+        </template>
         <el-button @click="$router.push('/lab/list')">实验室列表</el-button>
         <el-button @click="$router.push('/lab/my-bookings')">我的预约</el-button>
       </div>
@@ -61,7 +70,11 @@
 </template>
 
 <script setup>
-// 工作台：统计卡片 + 快捷入口，后续可接真实接口
+import { computed } from 'vue'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+const role = computed(() => userStore.role)
 </script>
 
 <style lang="scss" scoped>

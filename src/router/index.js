@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { getToken } from '@/utils/auth'
+import { getToken, getUser } from '@/utils/auth'
 import routes from './routes'
 
 const router = createRouter({
@@ -16,6 +16,12 @@ router.beforeEach((to, _from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
+      const role = getUser()?.role ?? ''
+      const roles = to.meta?.roles
+      if (roles?.length && !roles.includes(role)) {
+        next({ path: '/' })
+        return
+      }
       next()
     }
   } else {

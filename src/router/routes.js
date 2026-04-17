@@ -27,31 +27,37 @@ export default [
         path: 'attendance/check-in',
         name: 'AttendanceCheckIn',
         component: () => import('@/views/attendance/CheckInView.vue'),
-        meta: { title: '考勤签到', icon: 'Calendar' },
+        meta: { title: '考勤签到', icon: 'Calendar', roles: ['student'] },
       },
       {
         path: 'attendance/records',
         name: 'AttendanceRecords',
         component: () => import('@/views/attendance/RecordsView.vue'),
-        meta: { title: '考勤记录', icon: 'List' },
+        meta: { title: '考勤记录', icon: 'List', roles: ['student'] },
       },
       {
         path: 'attendance/leave/apply',
         name: 'LeaveApply',
         component: () => import('@/views/attendance/LeaveApplyView.vue'),
-        meta: { title: '请假申请', icon: 'EditPen' },
+        meta: { title: '请假申请', icon: 'EditPen', roles: ['student'] },
       },
       {
         path: 'attendance/leave/list',
         name: 'LeaveList',
         component: () => import('@/views/attendance/LeaveListView.vue'),
-        meta: { title: '我的请假', icon: 'Document' },
+        meta: { title: '我的请假', icon: 'Document', roles: ['student'] },
+      },
+      {
+        path: 'attendance/leave/approve',
+        name: 'LeaveApprove',
+        component: () => import('@/views/attendance/LeaveApproveView.vue'),
+        meta: { title: '请假审批', icon: 'CircleCheck', roles: ['teacher'] },
       },
       {
         path: 'attendance/manage',
         name: 'AttendanceManage',
         component: () => import('@/views/attendance/ManageView.vue'),
-        meta: { title: '考勤管理', icon: 'Setting', roles: ['teacher', 'admin'] },
+        meta: { title: '考勤管理', icon: 'Setting', roles: ['admin'] },
       },
       // 实验室预约
       {

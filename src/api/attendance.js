@@ -36,7 +36,24 @@ export function getLeaveList(params) {
   })
 }
 
-/** 考勤管理列表（教师/管理员） */
+/** 撤回请假申请 */
+export function cancelLeave(id) {
+  return request({
+    url: `/attendance/leave/${id}/cancel`,
+    method: 'put',
+  })
+}
+
+/** 教师待审批请假列表 */
+export function getPendingLeaveList(params) {
+  return request({
+    url: '/attendance/leave/pending',
+    method: 'get',
+    params,
+  })
+}
+
+/** 考勤管理列表（管理员） */
 export function getAttendanceManageList(params) {
   return request({
     url: '/attendance/manage',

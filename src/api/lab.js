@@ -10,10 +10,11 @@ export function getLabList(params) {
 }
 
 /** 实验室详情 */
-export function getLabDetail(id) {
+export function getLabDetail(id, params) {
   return request({
     url: `/lab/${id}`,
     method: 'get',
+    params,
   })
 }
 
@@ -44,6 +45,22 @@ export function getMyBookings(params) {
   })
 }
 
+/** 预约签到 */
+export function checkInBooking(id) {
+  return request({
+    url: `/lab/booking/${id}/check-in`,
+    method: 'put',
+  })
+}
+
+/** 预约签退 */
+export function checkOutBooking(id) {
+  return request({
+    url: `/lab/booking/${id}/check-out`,
+    method: 'put',
+  })
+}
+
 /** 取消预约 */
 export function cancelBooking(id) {
   return request({
@@ -67,6 +84,15 @@ export function approveBooking(id, data) {
     url: `/lab/booking/${id}/approve`,
     method: 'put',
     data,
+  })
+}
+
+/** 实验室真实使用率统计 */
+export function getLabUsageStats(params) {
+  return request({
+    url: '/lab/usage/stats',
+    method: 'get',
+    params,
   })
 }
 

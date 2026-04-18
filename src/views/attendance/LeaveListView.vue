@@ -2,20 +2,28 @@
   <div class="leave-list">
     <el-card>
       <template #header>
-        <span>我的请假</span>
+        <span>我的课程请假</span>
       </template>
       <el-table :data="list" border stripe>
+        <el-table-column prop="courseCode" label="课程编号" width="120" />
+        <el-table-column prop="courseName" label="课程名称" min-width="180" />
+        <el-table-column prop="teacherName" label="授课教师" width="120" />
+        <el-table-column prop="courseDate" label="日期" width="120" />
+        <el-table-column prop="courseTime" label="上课时间" width="160" />
         <el-table-column prop="type" label="类型" width="80">
           <template #default="{ row }">
             {{ { personal: '事假', sick: '病假', other: '其他' }[row.type] ?? row.type }}
           </template>
         </el-table-column>
-        <el-table-column prop="startTime" label="开始时间" width="170" />
-        <el-table-column prop="endTime" label="结束时间" width="170" />
         <el-table-column prop="reason" label="事由" show-overflow-tooltip />
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
             <el-tag :type="statusType(row.status)">{{ row.status }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="100" fixed="right">
+          <template #default="{ row }">
+            <el-button v-if="row.status === '待审批'" type="danger" link size="small" @click="handleCancel(row)">撤回</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -34,7 +42,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getLeaveList } from '@/api/attendance'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { cancelLeave, getLeaveList } from '@/api/attendance'
 
 const list = ref([])
 const page = ref(1)
@@ -50,6 +59,13 @@ async function loadList() {
   const res = await getLeaveList({ page: page.value, pageSize: pageSize.value }).catch(() => ({ list: [], total: 0 }))
   list.value = res?.list ?? res?.records ?? []
   total.value = res?.total ?? 0
+}
+
+async function handleCancel(row) {
+  await ElMessageBox.confirm('确定撤回这条请假申请？', '提示', { type: 'warning' })
+  await cancelLeave(row.id)
+  ElMessage.success('已撤回')
+  loadList()
 }
 
 onMounted(loadList)

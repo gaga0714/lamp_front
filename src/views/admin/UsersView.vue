@@ -13,7 +13,6 @@
           <el-select v-model="role" placeholder="全部" clearable style="width: 120px">
             <el-option label="研究生" value="student" />
             <el-option label="教师" value="teacher" />
-            <el-option label="实验室管理员" value="labAdmin" />
             <el-option label="系统管理员" value="admin" />
           </el-select>
         </el-form-item>
@@ -26,7 +25,7 @@
         <el-table-column prop="name" label="姓名" width="100" />
         <el-table-column prop="role" label="角色" width="100">
           <template #default="{ row }">
-            {{ { student: '研究生', teacher: '教师', labAdmin: '实验室管理员', admin: '系统管理员' }[row.role] ?? row.role }}
+            {{ { student: '研究生', teacher: '教师', admin: '系统管理员' }[row.role] ?? row.role }}
           </template>
         </el-table-column>
         <el-table-column prop="phone" label="手机号" />

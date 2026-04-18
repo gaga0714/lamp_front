@@ -2,7 +2,7 @@
   <div class="records">
     <el-card>
       <template #header>
-        <span>考勤记录</span>
+        <span>课程考勤</span>
       </template>
       <el-form :inline="true" class="filter-form">
         <el-form-item label="日期范围">
@@ -20,9 +20,13 @@
         </el-form-item>
       </el-form>
       <el-table :data="list" border stripe>
-        <el-table-column prop="date" label="日期" width="120" />
-        <el-table-column prop="checkInTime" label="签到时间" />
-        <el-table-column prop="checkOutTime" label="签退时间" />
+        <el-table-column prop="courseCode" label="课程编号" width="120" />
+        <el-table-column prop="courseName" label="课程名称" min-width="180" />
+        <el-table-column prop="teacherName" label="授课教师" width="120" />
+        <el-table-column prop="courseDate" label="日期" width="120" />
+        <el-table-column prop="courseTime" label="上课时间" width="160" />
+        <el-table-column prop="location" label="地点" width="120" />
+        <el-table-column prop="checkInTime" label="签到时间" width="180" />
         <el-table-column prop="status" label="状态">
           <template #default="{ row }">
             <el-tag :type="statusType(row.status)">{{ row.status }}</el-tag>
@@ -53,7 +57,7 @@ const pageSize = ref(10)
 const total = ref(0)
 
 function statusType(s) {
-  const map = { 正常: 'success', 迟到: 'warning', 早退: 'warning', 缺勤: 'danger' }
+  const map = { 已签到: 'success', 迟到: 'warning', 请假: 'info', 缺勤: 'danger', 待签到: '' }
   return map[s] || 'info'
 }
 

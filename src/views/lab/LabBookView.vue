@@ -7,7 +7,12 @@
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" style="max-width: 500px">
         <el-form-item label="实验室" prop="labId">
           <el-select v-model="form.labId" placeholder="请选择实验室" style="width: 100%" filterable>
-            <el-option v-for="item in labList" :key="item.id" :label="item.name" :value="item.id" />
+            <el-option
+              v-for="item in labList"
+              :key="item.id"
+              :label="`${formatLabCode(item.id)} ${item.name}${item.location ? `（${item.location}）` : ''}`"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="预约日期" prop="date">
@@ -19,6 +24,8 @@
             <el-option label="10:00-12:00" value="10:00-12:00" />
             <el-option label="14:00-16:00" value="14:00-16:00" />
             <el-option label="16:00-18:00" value="16:00-18:00" />
+            <el-option label="18:00-20:00" value="18:00-20:00" />
+            <el-option label="20:00-22:00" value="20:00-22:00" />
           </el-select>
         </el-form-item>
         <el-form-item label="用途/人数" prop="purpose">
@@ -39,6 +46,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getLabList } from '@/api/lab'
 import { createBooking } from '@/api/lab'
+import { formatLabCode } from '@/utils/format'
 
 const route = useRoute()
 const router = useRouter()
@@ -62,6 +70,8 @@ async function loadLabs() {
   const res = await getLabList().catch(() => ({}))
   labList.value = res?.list ?? res?.records ?? []
   if (route.query.id) form.labId = Number(route.query.id)
+  if (route.query.date) form.date = route.query.date
+  if (route.query.slot) form.slot = route.query.slot
 }
 
 async function onSubmit() {

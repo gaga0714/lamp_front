@@ -6,8 +6,15 @@
         <el-button type="primary" style="float: right" @click="handleEdit()">新增实验室</el-button>
       </template>
       <el-table :data="list" border stripe>
+        <el-table-column label="编号" width="90">
+          <template #default="{ row }">
+            {{ formatLabCode(row.id) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="名称" width="140" />
+        <el-table-column prop="location" label="位置" width="180" show-overflow-tooltip />
         <el-table-column prop="description" label="描述" show-overflow-tooltip />
+        <el-table-column prop="equipmentInfo" label="设备" width="220" show-overflow-tooltip />
         <el-table-column prop="capacity" label="容量" width="80" />
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
@@ -39,6 +46,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { getLabManageList, deleteLab } from '@/api/lab'
+import { formatLabCode } from '@/utils/format'
 
 const list = ref([])
 const page = ref(1)

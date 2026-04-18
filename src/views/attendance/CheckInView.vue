@@ -2,20 +2,18 @@
   <div class="check-in">
     <el-card>
       <template #header>
-        <span>课程签到</span>
+        <span>今日课程签到</span>
       </template>
       <div class="check-in-content">
         <p class="current-time">{{ currentTime }}</p>
         <p class="current-date">{{ currentDate }}</p>
-        <el-date-picker v-model="selectedDate" type="date" value-format="YYYY-MM-DD" @change="loadCourses" />
       </div>
 
-      <el-empty v-if="!list.length" description="所选日期暂无课程安排" />
+      <el-empty v-if="!list.length" description="今天暂无可签到课程" />
       <el-table v-else :data="list" border stripe>
         <el-table-column prop="courseCode" label="课程编号" width="120" />
         <el-table-column prop="courseName" label="课程名称" min-width="180" />
         <el-table-column prop="teacherName" label="授课教师" width="120" />
-        <el-table-column prop="courseDate" label="日期" width="120" />
         <el-table-column prop="courseTime" label="时间" width="160" />
         <el-table-column prop="location" label="地点" width="140" />
         <el-table-column prop="status" label="状态" width="100">
@@ -43,7 +41,6 @@ import { getStudentCourseOptions } from '@/api/course'
 
 const currentTime = ref('')
 const currentDate = ref('')
-const selectedDate = ref(formatDate(new Date()))
 const list = ref([])
 const loadingId = ref(null)
 let timer = null
@@ -67,7 +64,8 @@ function statusType(status) {
 }
 
 async function loadCourses() {
-  const res = await getStudentCourseOptions({ date: selectedDate.value }).catch(() => ({ list: [] }))
+  const today = formatDate(new Date())
+  const res = await getStudentCourseOptions({ date: today }).catch(() => ({ list: [] }))
   list.value = res?.list ?? []
 }
 

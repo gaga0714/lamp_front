@@ -51,7 +51,7 @@
       <template #header>快捷入口</template>
       <div class="actions">
         <template v-if="role === 'student'">
-          <el-button type="primary" @click="$router.push('/course/student/schedule')">我的课表</el-button>
+          <el-button @click="$router.push('/course/student/schedule')">我的课表</el-button>
           <el-button @click="$router.push('/attendance/check-in')">课程签到</el-button>
           <el-button @click="$router.push('/attendance/records')">课程考勤</el-button>
           <el-button @click="$router.push('/attendance/leave/apply')">课程请假</el-button>
@@ -59,13 +59,13 @@
           <el-button @click="$router.push('/lab/my-bookings')">我的预约</el-button>
         </template>
         <template v-else-if="role === 'teacher'">
-          <el-button type="primary" @click="$router.push('/course/teacher/schedule')">我的授课</el-button>
+          <el-button @click="$router.push('/course/teacher/schedule')">我的授课</el-button>
           <el-button @click="$router.push('/attendance/course/manage')">课程考勤管理</el-button>
-          <el-button type="primary" @click="$router.push('/attendance/leave/approve')">请假审批</el-button>
+          <el-button @click="$router.push('/attendance/leave/approve')">请假审批</el-button>
           <el-button @click="$router.push('/lab/my-bookings')">我的预约</el-button>
         </template>
         <template v-else-if="role === 'admin'">
-          <el-button type="primary" @click="$router.push('/course/manage')">课表管理</el-button>
+          <el-button @click="$router.push('/course/manage')">课表管理</el-button>
           <el-button @click="$router.push('/attendance/manage')">考勤总览</el-button>
           <el-button @click="$router.push('/lab/usage-stats')">实验室使用统计</el-button>
         </template>

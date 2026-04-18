@@ -71,18 +71,6 @@ export default [
         component: () => import('@/views/attendance/CourseManageView.vue'),
         meta: { title: '课程考勤管理', icon: 'DataAnalysis', roles: ['teacher'] },
       },
-      {
-        path: 'attendance/manage',
-        name: 'AttendanceManage',
-        component: () => import('@/views/attendance/ManageView.vue'),
-        meta: { title: '考勤总览', icon: 'Setting', roles: ['admin'] },
-      },
-      {
-        path: 'course/manage',
-        name: 'CourseManage',
-        component: () => import('@/views/course/CourseManageView.vue'),
-        meta: { title: '课表管理', icon: 'Collection', roles: ['admin'] },
-      },
       // 实验室预约
       {
         path: 'lab/list',
@@ -138,13 +126,6 @@ export default [
         name: 'Password',
         component: () => import('@/views/profile/PasswordView.vue'),
         meta: { title: '修改密码', icon: 'Lock', hideMenu: true },
-      },
-      // 管理后台
-      {
-        path: 'admin/users',
-        name: 'AdminUsers',
-        component: () => import('@/views/admin/UsersView.vue'),
-        meta: { title: '用户管理', icon: 'UserFilled', roles: ['admin'] },
       },
     ],
   },

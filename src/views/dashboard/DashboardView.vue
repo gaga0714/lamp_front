@@ -65,8 +65,8 @@
           <el-button @click="$router.push('/lab/my-bookings')">我的预约</el-button>
         </template>
         <template v-else-if="role === 'admin'">
-          <el-button @click="$router.push('/course/manage')">课表管理</el-button>
-          <el-button @click="$router.push('/attendance/manage')">考勤总览</el-button>
+          <el-button @click="$router.push('/lab/approve')">预约审批</el-button>
+          <el-button @click="$router.push('/lab/manage')">实验室管理</el-button>
           <el-button @click="$router.push('/lab/usage-stats')">实验室使用统计</el-button>
         </template>
         <el-button @click="$router.push('/lab/list')">实验室列表</el-button>

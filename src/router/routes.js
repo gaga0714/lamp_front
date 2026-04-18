@@ -115,6 +115,12 @@ export default [
         meta: { title: '预约审批', icon: 'CircleCheck', roles: ['admin'] },
       },
       {
+        path: 'lab/usage-stats',
+        name: 'LabUsageStats',
+        component: () => import('@/views/lab/LabUsageStatsView.vue'),
+        meta: { title: '实验室使用统计', icon: 'DataAnalysis', roles: ['admin'] },
+      },
+      {
         path: 'lab/manage',
         name: 'LabManage',
         component: () => import('@/views/lab/LabManageView.vue'),

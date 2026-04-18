@@ -67,6 +67,7 @@
         <template v-else-if="role === 'admin'">
           <el-button type="primary" @click="$router.push('/course/manage')">课表管理</el-button>
           <el-button @click="$router.push('/attendance/manage')">考勤总览</el-button>
+          <el-button @click="$router.push('/lab/usage-stats')">实验室使用统计</el-button>
         </template>
         <el-button @click="$router.push('/lab/list')">实验室列表</el-button>
       </div>

@@ -27,6 +27,15 @@ export function getLabSlots(id, params) {
   })
 }
 
+/** 某日时段可预约状态 */
+export function getLabSlotStatus(id, params) {
+  return request({
+    url: `/lab/${id}/slot-status`,
+    method: 'get',
+    params,
+  })
+}
+
 /** 提交预约 */
 export function createBooking(data) {
   return request({

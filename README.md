@@ -1,80 +1,169 @@
-# 研究生考勤及实验室预约系统 - 前端
+# 研究生考勤及实验室预约系统前端
 
-基于 B/S 架构的研究生考勤及实验室预约系统前端项目，技术栈：Vue 3 + Vite + Element Plus + Vue Router + Pinia + Axios。
+基于 `Vue 3 + Vite + Element Plus + Vue Router + Pinia + Axios` 的前端项目。
+
+当前代码已按 3 个业务角色收敛：
+- `student`：研究生
+- `teacher`：教师
+- `admin`：实验室管理员
+
+## 当前功能
+
+### 通用
+- 登录
+- 注册
+- 工作台
+- 个人资料
+- 修改密码
+
+### 学生端
+- 我的课表
+- 课程签到
+- 课程考勤
+- 课程请假
+- 我的请假
+- 实验室列表
+- 实验室预约
+- 我的预约
+
+### 教师端
+- 我的授课
+- 课程考勤管理
+- 请假审批
+- 实验室列表
+- 实验室预约
+- 我的预约
+
+### 实验室管理员端
+- 实验室列表
+- 预约审批
+- 实验室管理
+- 实验室使用统计
+
+说明：当前前端已经移除了实验室管理员的 `课表管理`、`考勤总览`、`用户管理` 等入口。
 
 ## 项目结构
 
-```
+```text
 lamp_front/
-├── public/                 # 静态资源
-│   └── favicon.svg
+├── public/
 ├── src/
-│   ├── api/                # 接口封装
-│   │   ├── auth.js
-│   │   ├── attendance.js
-│   │   ├── lab.js
-│   │   └── user.js
-│   ├── assets/             # 资源与全局样式
-│   │   └── styles/
-│   │       └── main.scss
-│   ├── layouts/            # 布局
-│   │   ├── DefaultLayout.vue   # 主布局（侧栏+顶栏+内容区）
-│   │   └── BlankLayout.vue     # 空白布局（登录等）
-│   ├── router/
-│   │   ├── index.js        # 路由实例与守卫
-│   │   └── routes.js       # 路由配置
-│   ├── stores/             # Pinia 状态
-│   │   └── user.js
-│   ├── utils/
-│   │   ├── auth.js         # Token/用户本地存储
-│   │   └── request.js      # Axios 封装
-│   ├── views/              # 页面
-│   │   ├── login/          # 登录、注册
-│   │   ├── dashboard/      # 工作台
-│   │   ├── attendance/     # 考勤（签到、记录、请假、管理）
-│   │   ├── lab/            # 实验室（列表、详情、预约、我的预约、审批、管理）
-│   │   ├── profile/        # 个人资料、修改密码
-│   │   ├── admin/          # 用户管理、实验室管理
-│   │   └── error/          # 404
+│   ├── api/              # 接口封装
+│   ├── assets/           # 样式与静态资源
+│   ├── layouts/          # 页面布局
+│   ├── router/           # 路由配置与守卫
+│   ├── stores/           # Pinia 状态
+│   ├── utils/            # 请求封装、认证工具、格式化工具
+│   ├── views/
+│   │   ├── attendance/   # 课程签到、考勤、请假、教师管理
+│   │   ├── course/       # 学生课表、教师授课
+│   │   ├── dashboard/    # 工作台
+│   │   ├── error/        # 404
+│   │   ├── lab/          # 实验室列表、预约、审批、管理、统计
+│   │   ├── login/        # 登录、注册
+│   │   └── profile/      # 个人资料、修改密码
 │   ├── App.vue
 │   └── main.js
-├── index.html
 ├── package.json
 ├── vite.config.js
-├── jsconfig.json
 └── README.md
 ```
 
-## 功能模块
+## 关键路由现状
 
-- **通用**：登录、注册、工作台
-- **考勤**：考勤签到、考勤记录、请假申请、我的请假、考勤管理（教师/管理员）
-- **实验室**：实验室列表、实验室详情、预约申请、我的预约、预约审批、实验室管理
-- **个人**：个人资料、修改密码
-- **管理**：用户管理、实验室管理（管理员）
+当前实际菜单与权限主要定义在 `src/router/routes.js`：
 
-## 开发
+### `student`
+- `/course/student/schedule`
+- `/attendance/check-in`
+- `/attendance/records`
+- `/attendance/leave/apply`
+- `/attendance/leave/list`
+- `/lab/my-bookings`
+
+### `teacher`
+- `/course/teacher/schedule`
+- `/attendance/course/manage`
+- `/attendance/leave/approve`
+- `/lab/my-bookings`
+
+### `admin`
+- `/lab/approve`
+- `/lab/usage-stats`
+- `/lab/manage`
+
+### 所有登录角色可访问
+- `/dashboard`
+- `/lab/list`
+- `/profile`
+- `/profile/password`
+
+## 工作台现状
+
+`src/views/dashboard/DashboardView.vue` 会根据角色显示不同快捷入口和统计卡片：
+
+- `student`：课程与个人预约相关
+- `teacher`：授课、请假审批、个人预约相关
+- `admin`：预约审批、实验室管理、实验室使用统计、实验室列表
+
+其中 `admin` 工作台已经完全改成实验室视角。
+
+## 开发运行
+
+### 安装依赖
 
 ```bash
-# 安装依赖
 npm install
+```
 
-# 启动开发服务（默认 http://localhost:5173）
+### 启动开发环境
+
+```bash
 npm run dev
+```
 
-# 构建生产
+默认地址：
+- 前端：`http://localhost:5173`
+- 开发代理：`/api -> http://localhost:8080`
+
+### 生产构建
+
+```bash
 npm run build
+```
 
-# 预览构建结果
+### 本地预览构建结果
+
+```bash
 npm run preview
 ```
 
-## 后端接口
+## 后端联调说明
 
-- 开发环境通过 Vite 代理将 `/api` 转发到 `http://localhost:8080`，可在 `vite.config.js` 中修改。
-- 生产环境接口基础地址可通过环境变量 `VITE_API_BASE_URL` 配置。
+当前 `vite.config.js` 中的代理配置为：
 
-## 角色与菜单
+```js
+server: {
+  port: 5173,
+  proxy: {
+    '/api': {
+      target: 'http://localhost:8080',
+      changeOrigin: true,
+    },
+  },
+}
+```
 
-- 路由中通过 `meta.roles` 控制菜单与访问权限（如 `teacher`、`admin`、`labAdmin`）。
-- 侧栏菜单根据当前用户角色过滤显示，需后端登录接口返回用户角色字段（如 `role`）。
+因此本地开发时需要先启动后端项目，并确保后端提供 `/api` 前缀接口。
+
+## 权限与菜单说明
+
+- 路由通过 `meta.roles` 控制页面可见性和访问权限。
+- 左侧菜单会根据当前登录角色自动过滤。
+- `lab/my-bookings` 仅对 `student`、`teacher` 开放。
+- 当前不存在前端可见的“用户管理”页面入口。
+
+## 备注
+
+- 仓库中可能仍保留部分历史页面文件，但只要没有挂在 `routes.js` 中，就不会出现在当前系统菜单里。
+- 如果后续继续扩展系统管理员角色，需要同时调整前端路由权限与后端接口权限。 

@@ -11,7 +11,8 @@ body {
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
   font-size: 14px;
   color: #303133;
-  background-color: #f0f2f5;
+  line-height: 1.5;
+  background-color: #f4f7fb;
 }
 
 a {
@@ -22,4 +23,19 @@ a {
 #app {
   width: 100%;
   min-height: 100vh;
+}
+
+.el-card {
+  border-radius: 18px;
+  border-color: rgba(47, 79, 111, 0.08);
+}
+
+.el-button {
+  border-radius: 10px;
+}
+
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  border-radius: 12px;
 }

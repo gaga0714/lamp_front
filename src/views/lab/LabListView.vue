@@ -11,7 +11,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="预约日期">
-          <el-date-picker v-model="filters.date" type="date" value-format="YYYY-MM-DD" placeholder="选择日期" style="width: 180px" />
+          <el-date-picker
+            v-model="filters.date"
+            type="date"
+            value-format="YYYY-MM-DD"
+            placeholder="选择日期"
+            style="width: 180px"
+            :disabled-date="disabledPastDate"
+          />
         </el-form-item>
         <el-form-item label="预约时段">
           <el-select v-model="filters.slot" placeholder="全部" clearable style="width: 160px">
@@ -40,28 +47,26 @@
         </el-form-item>
       </el-form>
       <div class="result-summary">{{ resultSummaryText }}</div>
-      <el-row :gutter="16" class="lab-cards">
-        <el-col v-for="item in list" :key="item.id" :span="6">
-          <el-card shadow="hover" class="lab-card" @click="goDetail(item)">
-            <div class="lab-id">实验室编号：{{ formatLabCode(item.id) }}</div>
-            <div class="lab-name">{{ item.name }}</div>
-            <div class="lab-location">{{ item.location || '暂无位置' }}</div>
-            <div class="lab-desc">{{ item.description || '暂无描述' }}</div>
-            <div class="lab-equipment">{{ item.equipmentInfo || '暂无设备信息' }}</div>
-            <div class="lab-meta">
-              <span>容量：{{ item.capacity ?? '-' }}人</span>
-              <el-tag :type="item.status === 'available' ? 'success' : 'info'" size="small">
-                {{ item.status === 'available' ? '可预约' : '维护中' }}
-              </el-tag>
-            </div>
-            <div v-if="appliedFilters.date && appliedFilters.slot" class="lab-availability">
-              <el-tag :type="item.currentSlotAvailable ? 'success' : 'warning'" size="small">
-                {{ item.currentSlotAvailable ? '当前时段可预约' : '当前时段不可预约' }}
-              </el-tag>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
+      <div class="lab-cards">
+        <el-card v-for="item in list" :key="item.id" shadow="hover" class="lab-card" @click="goDetail(item)">
+          <div class="lab-id">实验室编号：{{ formatLabCode(item.id) }}</div>
+          <div class="lab-name">{{ item.name }}</div>
+          <div class="lab-location">{{ item.location || '暂无位置' }}</div>
+          <div class="lab-desc">{{ item.description || '暂无描述' }}</div>
+          <div class="lab-equipment">{{ item.equipmentInfo || '暂无设备信息' }}</div>
+          <div class="lab-meta">
+            <span>容量：{{ item.capacity ?? '-' }}人</span>
+            <el-tag :type="item.status === 'available' ? 'success' : 'info'" size="small">
+              {{ item.status === 'available' ? '可预约' : '维护中' }}
+            </el-tag>
+          </div>
+          <div v-if="appliedFilters.date && appliedFilters.slot" class="lab-availability">
+            <el-tag :type="item.currentSlotAvailable ? 'success' : 'warning'" size="small">
+              {{ item.currentSlotAvailable ? '当前时段可预约' : '当前时段不可预约' }}
+            </el-tag>
+          </div>
+        </el-card>
+      </div>
       <el-empty v-if="list.length === 0" description="暂无实验室" />
       <el-pagination
         v-model:current-page="page"
@@ -76,7 +81,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getLabList } from '@/api/lab'
 import { formatLabCode } from '@/utils/format'
@@ -150,6 +155,29 @@ const resultSummaryText = computed(() => {
   return hasActiveFilters.value ? `当前筛选匹配 ${total.value} 个实验室` : `当前共有 ${total.value} 个实验室`
 })
 
+function resolvePageSize() {
+  const width = window.innerWidth
+  if (width >= 1400) return 8
+  if (width >= 1100) return 6
+  if (width >= 768) return 4
+  return 3
+}
+
+function disabledPastDate(time) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return time.getTime() < today.getTime()
+}
+
+async function syncResponsivePageSize() {
+  const nextSize = resolvePageSize()
+  if (nextSize !== pageSize.value) {
+    pageSize.value = nextSize
+    page.value = 1
+    await loadList()
+  }
+}
+
 async function loadList() {
   const res = await getLabList({
     name: appliedFilters.name || undefined,
@@ -209,7 +237,15 @@ function goDetail(item) {
   router.push({ path: `/lab/detail/${item.id}`, query })
 }
 
-onMounted(loadList)
+onMounted(async () => {
+  pageSize.value = resolvePageSize()
+  window.addEventListener('resize', syncResponsivePageSize)
+  await loadList()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', syncResponsivePageSize)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -222,6 +258,9 @@ onMounted(loadList)
 }
 .lab-cards {
   margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
 }
 .pagination {
   margin-top: 16px;
@@ -229,7 +268,12 @@ onMounted(loadList)
 }
 .lab-card {
   cursor: pointer;
-  margin-bottom: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
   .lab-id {
     font-size: 12px;
     color: #909399;
@@ -270,6 +314,24 @@ onMounted(loadList)
   }
   .lab-availability {
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 767px) {
+  .filter-form {
+    :deep(.el-form-item) {
+      display: flex;
+      width: 100%;
+      margin-right: 0;
+    }
+
+    :deep(.el-form-item__content) {
+      width: 100%;
+    }
+  }
+
+  .lab-cards {
+    grid-template-columns: 1fr;
   }
 }
 </style>

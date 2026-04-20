@@ -21,7 +21,7 @@
         </div>
         <el-form ref="formRef" :model="form" :rules="rules" label-width="0" @submit.prevent="onSubmit">
           <el-form-item prop="username">
-            <el-input v-model="form.username" placeholder="用户名 / 学号 / 工号" prefix-icon="User" size="large" />
+            <el-input v-model="form.username" placeholder="账号（学号 / 工号）" prefix-icon="User" size="large" />
           </el-form-item>
           <el-form-item prop="password">
             <el-input
@@ -66,7 +66,7 @@ const form = reactive({
   password: '',
 })
 const rules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  username: [{ required: true, message: '请输入账号（学号或工号）', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 }
 

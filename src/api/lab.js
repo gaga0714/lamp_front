@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+/** 实验室筛选选项（名称、位置、设备、时段） */
+export function getLabFilterOptions() {
+  return request({
+    url: '/lab/options/filters',
+    method: 'get',
+  })
+}
+
 /** 实验室列表 */
 export function getLabList(params) {
   return request({

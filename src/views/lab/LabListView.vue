@@ -83,7 +83,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getLabList } from '@/api/lab'
+import { getLabList, getLabFilterOptions } from '@/api/lab'
 import { formatLabCode } from '@/utils/format'
 
 const router = useRouter()
@@ -109,37 +109,10 @@ const appliedFilters = reactive({
   location: '',
   equipment: '',
 })
-const nameOptions = [
-  '智能感知实验室',
-  '数据智能实验室',
-  '嵌入式系统实验室',
-  '网络空间安全实验室',
-  '机器视觉实验室',
-  '云计算与大数据实验室',
-  '机器人控制实验室',
-  '软件工程实验室',
-  '虚拟仿真实验室',
-  '智慧医疗实验室',
-]
-const slotOptions = ['08:00-10:00', '10:00-12:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00']
-const locationOptions = ['一教', '二教', '三教', '四教南', '六教南', '七教北', '十教', '十二教']
-const equipmentOptions = [
-  '高性能工作站',
-  'GPU服务器',
-  '投影仪',
-  '会议显示屏',
-  '工业相机',
-  '示波器',
-  '机械臂平台',
-  'PLC控制器',
-  'FPGA开发板',
-  '白板',
-  '录播设备',
-  '传感器平台',
-  '虚拟现实设备',
-  '3D打印机',
-  '服务器集群',
-]
+const nameOptions = ref([])
+const slotOptions = ref(['08:00-10:00', '10:00-12:00', '14:00-16:00', '16:00-18:00', '18:00-20:00', '20:00-22:00'])
+const locationOptions = ref([])
+const equipmentOptions = ref([])
 const hasActiveFilters = computed(() => {
   return !!(
     appliedFilters.name ||
@@ -167,6 +140,14 @@ function disabledPastDate(time) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   return time.getTime() < today.getTime()
+}
+
+async function loadFilterOptions() {
+  const res = await getLabFilterOptions().catch(() => ({}))
+  if (res?.names) nameOptions.value = res.names
+  if (res?.locations) locationOptions.value = res.locations
+  if (res?.equipmentKeywords) equipmentOptions.value = res.equipmentKeywords
+  if (res?.slots) slotOptions.value = res.slots
 }
 
 async function syncResponsivePageSize() {
@@ -240,6 +221,7 @@ function goDetail(item) {
 onMounted(async () => {
   pageSize.value = resolvePageSize()
   window.addEventListener('resize', syncResponsivePageSize)
+  await loadFilterOptions()
   await loadList()
 })
 
